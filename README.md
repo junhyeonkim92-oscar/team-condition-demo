@@ -5,7 +5,7 @@
 
 헤이제임스 8주 프로그램 **1주차 제출물** — 1차 프로젝트(축소판)의 첫 화면입니다.
 
-**라이브 데모** → https://team-condition-demo.surge.sh
+**라이브 데모** → https://junhyeonkim92-oscar.github.io/team-condition-demo/
 
 ---
 
@@ -74,7 +74,7 @@ cd team-condition-demo
 | 파일 | 내용 |
 |---|---|
 | [index.html](index.html) | 1차 프로젝트 첫 화면 (라이브 데모와 동일) |
-| [docs/서비스_한장_정의서_2장.pdf](docs/서비스_한장_정의서_2장.pdf) | 1차(축소판)·2차(본편) 정의서 2장 |
+| [docs/service-definition-2p.pdf](docs/service-definition-2p.pdf) | 1차(축소판)·2차(본편) 정의서 2장 |
 | [docs/mvp_first_screen.png](docs/mvp_first_screen.png) | 첫 화면 캡처 (성인팀) |
 | [docs/mvp_team_u15.png](docs/mvp_team_u15.png) | 미성년팀 전환 화면 캡처 |
 
