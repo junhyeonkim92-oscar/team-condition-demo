@@ -3,104 +3,110 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>팀 컨디션 보드 (가칭) — 코치 대시보드</title>
+<title>팀 리포트 (가칭) — 스포츠 보고서 자동화</title>
 <style>
   :root{
-    --bg:#0a0a0a; --card:#171717; --card2:#1f1f1f; --line:#262626; --line2:#333;
-    --ink:#fff; --muted:#a3a3a3; --muted2:#737373;
-    --accent:#f97316; --accent-hi:#fb923c; --accent-dim:rgba(249,115,22,.14);
-    --g:#22c55e; --y:#eab308; --r:#ef4444; --gray:#6b7280;
-    --blue:#3b82f6;
+    --bg:#F2F4F6; --card:#FFFFFF; --ink:#191F28; --sub:#8B95A1; --sub2:#B0B8C1;
+    --line:#E5E8EB; --line2:#F2F4F6;
+    --blue:#3182F6; --blue-bg:#E8F3FF; --blue-dk:#1B64DA;
+    --green:#00C471; --green-bg:#E7F9F1;
+    --orange:#FF9500; --orange-bg:#FFF4E5;
+    --red:#F04452; --red-bg:#FEE;
   }
   *{box-sizing:border-box}
   body{margin:0;font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,'Malgun Gothic',sans-serif;
-       background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+       background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;letter-spacing:-.2px}
 
-  header{background:var(--bg);border-bottom:1px solid var(--line);padding:15px 24px;
+  header{background:var(--card);border-bottom:1px solid var(--line);padding:16px 24px;
          display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:10}
-  .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:16px;letter-spacing:-.2px}
-  .logo .mark{color:var(--accent)}
-  .tag{font-size:11px;background:var(--accent-dim);color:var(--accent-hi);padding:3px 9px;border-radius:999px;
-       font-weight:700;letter-spacing:.2px}
-  header nav{margin-left:auto;display:flex;gap:26px;font-size:14px}
-  header nav a{color:var(--muted);text-decoration:none;padding-bottom:3px;transition:color .15s}
-  header nav a:hover{color:var(--ink)}
-  header nav a.on{color:var(--ink);font-weight:600;border-bottom:2px solid var(--accent)}
-  .who{font-size:13px;color:var(--muted2);margin-left:20px;display:flex;align-items:center;gap:8px}
-  .who .av{width:26px;height:26px;border-radius:999px;background:var(--card2);border:1px solid var(--line2);
-           display:grid;place-items:center;font-size:11px;color:var(--muted);font-weight:700}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px}
+  .logo .dot{width:22px;height:22px;border-radius:7px;background:var(--blue);display:grid;place-items:center}
+  .tag{font-size:11px;background:var(--bg);color:var(--sub);padding:4px 9px;border-radius:8px;font-weight:600}
+  header nav{margin-left:auto;display:flex;gap:28px;font-size:15px;font-weight:600}
+  header nav a{color:var(--sub);text-decoration:none}
+  header nav a.on{color:var(--ink)}
+  .who{font-size:14px;color:var(--sub);margin-left:22px;display:flex;align-items:center;gap:8px}
+  .av{width:30px;height:30px;border-radius:999px;background:var(--blue-bg);color:var(--blue-dk);
+      display:grid;place-items:center;font-size:12px;font-weight:800}
 
-  .wrap{max-width:1200px;margin:0 auto;padding:26px 24px}
-  .bar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
-  h1{font-size:22px;margin:0;letter-spacing:-.3px}
-  .date{color:var(--muted2);font-size:13px}
-  .sel{margin-left:auto;display:flex;gap:8px}
-  select,button{font:inherit}
-  select{padding:8px 12px;border:1px solid var(--line2);border-radius:8px;background:var(--card);
-         color:var(--ink);max-width:250px;cursor:pointer}
-  select:focus{outline:none;border-color:var(--accent)}
-  .btn{padding:9px 15px;border:0;border-radius:8px;background:var(--accent);color:#1a0d00;
-       font-weight:700;cursor:pointer;transition:filter .15s}
-  .btn:hover{filter:brightness(1.1)}
-  .btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line2);font-weight:600}
-  .btn.ghost:hover{background:var(--card2)}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 24px 60px}
+  .bar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+  h1{font-size:26px;margin:0;font-weight:800;letter-spacing:-.6px}
+  .date{color:var(--sub);font-size:14px;font-weight:500}
+  select{margin-left:auto;padding:11px 14px;border:1px solid var(--line);border-radius:12px;
+         background:var(--card);color:var(--ink);font:inherit;font-weight:600;font-size:14px;cursor:pointer;max-width:260px}
 
-  .consent{display:flex;align-items:center;gap:11px;background:rgba(34,197,94,.08);
-           border:1px solid rgba(34,197,94,.22);border-radius:12px;padding:11px 15px;margin-bottom:18px;
-           font-size:12.5px;color:#b7e4c7;line-height:1.5}
-  .consent svg{flex:none}
-  .consent b{color:#6ee7a0}
-  .consent .link{margin-left:auto;color:var(--accent);font-weight:700;white-space:nowrap;
-                 text-decoration:none;font-size:12px}
+  .card{background:var(--card);border-radius:20px;padding:24px}
+  .card + .card{margin-top:14px}
 
-  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px}
-  .kpi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
-  .kpi .lab{font-size:12px;color:var(--muted2);margin-bottom:8px}
-  .kpi .val{font-size:27px;font-weight:800;line-height:1;letter-spacing:-.5px}
-  .kpi .sub{font-size:12px;color:var(--muted2);margin-top:8px}
-  .dotline{display:flex;gap:5px;margin-top:11px;flex-wrap:wrap}
-  .dot{width:11px;height:11px;border-radius:50%}
+  /* 히어로 — 이번 달 보고서 */
+  .hero{background:var(--card);border-radius:24px;padding:28px;margin-bottom:14px;
+        display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+  .hero .left{flex:1;min-width:260px}
+  .hero .badge{display:inline-block;background:var(--blue-bg);color:var(--blue-dk);
+               font-size:12px;font-weight:700;padding:5px 11px;border-radius:8px;margin-bottom:12px}
+  .hero h2{font-size:24px;margin:0 0 8px;font-weight:800;letter-spacing:-.5px}
+  .hero p{margin:0;color:var(--sub);font-size:15px;line-height:1.5}
+  .hero .right{display:flex;flex-direction:column;gap:10px;min-width:200px}
+  .btn{padding:15px 22px;border:0;border-radius:14px;background:var(--blue);color:#fff;
+       font:inherit;font-weight:700;font-size:15px;cursor:pointer;transition:background .15s;text-align:center}
+  .btn:hover{background:var(--blue-dk)}
+  .btn.sub{background:var(--bg);color:var(--ink)}
+  .btn.sub:hover{background:var(--line)}
 
-  .grid{display:grid;grid-template-columns:1fr 330px;gap:16px;align-items:start}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-  .card h2{font-size:14px;margin:0;padding:15px 18px;border-bottom:1px solid var(--line);
-           display:flex;align-items:center;gap:8px;font-weight:700}
-  .card h2 .cnt{color:var(--muted2);font-weight:400;font-size:12px}
+  /* 결과지 3종 */
+  .three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
+  .rep{background:var(--card);border-radius:20px;padding:22px;cursor:pointer;transition:transform .12s}
+  .rep:hover{transform:translateY(-2px)}
+  .rep .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+            font-size:20px;margin-bottom:14px}
+  .rep h3{font-size:17px;margin:0 0 5px;font-weight:700}
+  .rep p{margin:0 0 14px;color:var(--sub);font-size:13.5px;line-height:1.5}
+  .rep .meta{font-size:13px;color:var(--sub2);font-weight:600;display:flex;align-items:center;gap:6px}
+  .rep .go{color:var(--blue);font-weight:700;font-size:14px}
 
-  table{width:100%;border-collapse:collapse;font-size:13px}
-  th{background:transparent;color:var(--muted2);font-weight:600;text-align:left;
-     padding:10px 14px;border-bottom:1px solid var(--line);font-size:12px}
-  td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
-  tr:last-child td{border-bottom:0}
-  tr.row:hover{background:var(--card2);cursor:pointer}
+  /* 오늘 현황 */
+  .sec-h{display:flex;align-items:center;margin:26px 0 12px}
+  .sec-h h2{font-size:19px;margin:0;font-weight:800;letter-spacing:-.4px}
+  .sec-h .more{margin-left:auto;color:var(--sub);font-size:14px;font-weight:600;text-decoration:none}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .kpi{background:var(--card);border-radius:18px;padding:20px}
+  .kpi .lab{font-size:13px;color:var(--sub);margin-bottom:9px;font-weight:600}
+  .kpi .val{font-size:28px;font-weight:800;line-height:1;letter-spacing:-.8px}
+  .kpi .val small{font-size:15px;color:var(--sub);font-weight:600;letter-spacing:0}
+  .kpi .sub{font-size:13px;color:var(--sub2);margin-top:9px;font-weight:500}
+  .chips{display:flex;gap:5px;margin-top:12px;flex-wrap:wrap}
+  .chip{width:9px;height:9px;border-radius:3px}
+
+  /* 로스터 */
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th{color:var(--sub);font-weight:600;text-align:left;padding:0 14px 12px;font-size:13px}
+  td{padding:15px 14px;border-top:1px solid var(--line2)}
+  tr.row:hover td{background:#FAFBFC}
+  .nm{font-weight:700;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .sub2{color:var(--sub2);font-size:12.5px;margin-top:3px}
+  .pill{font-size:11px;font-weight:700;padding:3px 8px;border-radius:7px}
+  .pill.minor{background:var(--blue-bg);color:var(--blue-dk)}
+  .pill.adult{background:var(--bg);color:var(--sub)}
   .sig{display:inline-flex;align-items:center;gap:7px;font-weight:700;white-space:nowrap}
-  .sig i{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
-  .nm{font-weight:600;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-  .sub2{color:var(--muted2);font-size:11px;margin-top:3px}
-  .okmark{color:var(--g);font-weight:600}
-  .chip{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;letter-spacing:.2px}
-  .chip.minor{background:var(--accent-dim);color:var(--accent-hi)}
-  .chip.adult{background:#242424;color:var(--muted);border:1px solid var(--line2)}
-  .bar-mini{height:5px;background:#2a2a2a;border-radius:3px;overflow:hidden;width:76px}
-  .bar-mini span{display:block;height:100%;border-radius:3px}
-  .pain{font-size:12px}
-  .none{color:var(--muted2)}
-  .wait{color:var(--muted2)}
+  .sig i{width:8px;height:8px;border-radius:999px;flex:none}
+  .bar-mini{height:6px;background:var(--bg);border-radius:99px;overflow:hidden;width:80px}
+  .bar-mini span{display:block;height:100%;border-radius:99px}
+  .none{color:var(--sub2)}
 
-  .side .card{margin-bottom:16px}
-  .side .body{padding:16px 18px}
-  .spark{display:flex;align-items:flex-end;gap:4px;height:58px;margin:10px 0 6px}
-  .spark div{flex:1;background:var(--accent);border-radius:3px 3px 0 0;opacity:.8}
-  .legend{display:flex;flex-direction:column;gap:11px;font-size:12.5px;color:var(--muted)}
-  .legend div{display:flex;align-items:center;gap:9px}
-  .legend b{color:var(--ink)}
-  .legend i{width:9px;height:9px;border-radius:50%;flex:none}
-  .note{font-size:11.5px;color:var(--muted2);line-height:1.65;padding:13px 18px;
-        border-top:1px solid var(--line);background:rgba(255,255,255,.015)}
-  .plan{font-size:13px;line-height:2;color:var(--muted)}
-  footer{max-width:1200px;margin:0 auto;padding:16px 24px 40px;color:var(--muted2);font-size:11.5px;line-height:1.75}
-  footer b{color:var(--muted)}
-  @media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}
+  .consent{display:flex;align-items:center;gap:10px;background:var(--green-bg);
+           border-radius:14px;padding:14px 18px;margin-bottom:14px;font-size:14px;color:#00875A;font-weight:500}
+  .consent b{color:#006B47}
+  .consent .link{margin-left:auto;color:var(--blue);font-weight:700;white-space:nowrap;text-decoration:none;font-size:14px}
+
+  .hist td{font-size:14px}
+  .st{font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px;display:inline-block}
+  .st.done{background:var(--green-bg);color:#00875A}
+  .st.wait{background:var(--bg);color:var(--sub)}
+
+  footer{max-width:1080px;margin:0 auto;padding:8px 24px 50px;color:var(--sub2);font-size:12.5px;line-height:1.7}
+  @media(max-width:900px){.three{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}
     header nav{display:none}}
 </style>
 </head>
@@ -108,17 +114,19 @@
 
 <header>
   <div class="logo">
-    <svg width="21" height="21" viewBox="0 0 24 24" fill="none">
-      <path d="M2 19L9 7l4 6 2.5-3.5L22 19H2z" fill="#f97316"/>
-      <circle cx="9" cy="7" r="2.1" fill="#0a0a0a"/><circle cx="15.5" cy="9.5" r="1.7" fill="#0a0a0a"/>
-    </svg>
-    <span>팀 컨디션 보드</span> <span class="tag">가칭 · MVP</span>
+    <span class="dot">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+        <path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="#fff"/>
+        <path d="M8.5 13h5M8.5 16.5h7" stroke="#3182F6" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+    </span>
+    팀 리포트 <span class="tag">가칭</span>
   </div>
   <nav>
-    <a href="#" class="on">팀 현황</a>
+    <a href="#" class="on">보고서</a>
+    <a href="#">팀 현황</a>
     <a href="#">선수 관리</a>
     <a href="#">동의 관리</a>
-    <a href="#">리포트</a>
     <a href="#">설정</a>
   </nav>
   <div class="who"><span class="av">김</span>김준현 · 팀 관리자</div>
@@ -126,208 +134,230 @@
 
 <div class="wrap">
   <div class="bar">
-    <h1>오늘의 팀 현황</h1>
-    <span class="date">2026년 8월 18일 (화) · 오전 9:20 기준</span>
-    <div class="sel">
-      <select id="teamSel"></select>
-      <button class="btn ghost">주간 리포트 PDF</button>
-      <button class="btn">입력 요청 보내기</button>
+    <h1>보고서</h1>
+    <span class="date">2026년 8월 22일 (토)</span>
+    <select id="teamSel"></select>
+  </div>
+
+  <!-- 히어로 -->
+  <div class="hero">
+    <div class="left">
+      <span class="badge" id="heroBadge">8월 결과보고서</span>
+      <h2 id="heroTitle">이번 달 보고서, 준비됐습니다</h2>
+      <p id="heroDesc">8월 1일부터 어제까지 <b>측정 248건</b>이 쌓였습니다. 지금 만들면 선수별 향상 추이와 팀 집계가 자동으로 들어갑니다.</p>
     </div>
+    <div class="right">
+      <button class="btn">보고서 만들기</button>
+      <button class="btn sub">지난 보고서 보기</button>
+    </div>
+  </div>
+
+  <!-- 결과지 3종 -->
+  <div class="three">
+    <div class="rep">
+      <div class="ico" style="background:var(--blue-bg);color:var(--blue-dk)">📄</div>
+      <h3>일일 결과지</h3>
+      <p>오늘 팀 상태를 A4 한 장으로. 매일 아침 자동 발행할 수 있습니다.</p>
+      <div class="meta">오늘 08:10 발행 &nbsp;·&nbsp; <span class="go">받기</span></div>
+    </div>
+    <div class="rep">
+      <div class="ico" style="background:var(--green-bg);color:#00875A">📊</div>
+      <h3>월간 팀 결과지</h3>
+      <p>한 달 데이터를 분석해 팀 단위로. 기관 제출용으로 그대로 씁니다.</p>
+      <div class="meta">7월분 발행 완료 &nbsp;·&nbsp; <span class="go">8월분 만들기</span></div>
+    </div>
+    <div class="rep">
+      <div class="ico" style="background:var(--orange-bg);color:#C77700">👤</div>
+      <h3>월간 개인 결과지</h3>
+      <p>선수별 향상 추이. 학부모 상담과 선발 자료로 씁니다.</p>
+      <div class="meta">12명분 &nbsp;·&nbsp; <span class="go">일괄 만들기</span></div>
+    </div>
+  </div>
+
+  <!-- 최근 발행 -->
+  <div class="sec-h">
+    <h2>최근 발행 이력</h2>
+    <a href="#" class="more">전체 보기</a>
+  </div>
+  <div class="card" style="padding:20px 8px">
+    <table class="hist">
+      <thead><tr><th style="padding-left:16px">보고서</th><th>기간</th><th>제출처</th><th>상태</th><th></th></tr></thead>
+      <tbody id="hist"></tbody>
+    </table>
+  </div>
+
+  <!-- 오늘의 팀 현황 -->
+  <div class="sec-h">
+    <h2>오늘의 팀 현황</h2>
+    <a href="#" class="more">자세히 보기</a>
   </div>
 
   <div class="consent" id="consentBar"></div>
 
   <div class="kpis">
     <div class="kpi">
-      <div class="lab">오늘 입력 완료</div>
-      <div class="val"><span id="kDone"></span><span style="font-size:15px;color:var(--muted2)"> / <span id="kTotal"></span>명</span></div>
+      <div class="lab">오늘 입력</div>
+      <div class="val"><span id="kDone"></span><small> / <span id="kTotal"></span>명</small></div>
       <div class="sub" id="kDoneSub"></div>
     </div>
     <div class="kpi">
-      <div class="lab">팀 컨디션 신호</div>
+      <div class="lab">컨디션 신호</div>
       <div class="val" id="kSig"></div>
-      <div class="dotline" id="kDots"></div>
+      <div class="chips" id="kChips"></div>
     </div>
     <div class="kpi">
       <div class="lab">통증 보고</div>
-      <div class="val"><span id="kPain"></span><span style="font-size:15px;color:var(--muted2)">건</span></div>
+      <div class="val"><span id="kPain"></span><small>건</small></div>
       <div class="sub" id="kPainSub"></div>
     </div>
     <div class="kpi">
-      <div class="lab">주간 훈련부하 (팀 평균)</div>
-      <div class="val" id="kLoad"></div>
-      <div class="sub">ACWR · 권장 구간 0.8–1.3 이내</div>
+      <div class="lab">이번 달 누적 측정</div>
+      <div class="val" id="kCum"></div>
+      <div class="sub">보고서에 들어갈 데이터</div>
     </div>
   </div>
 
-  <div class="grid">
-    <div class="card">
-      <h2>선수 로스터 <span class="cnt" id="rosterCnt"></span></h2>
-      <table>
-        <thead>
-          <tr>
-            <th style="width:210px">선수</th><th style="width:98px">컨디션 신호</th>
-            <th>수면</th><th>주관 피로도</th><th>통증</th>
-            <th style="width:98px">훈련부하</th><th style="width:84px">마지막 입력</th>
-          </tr>
-        </thead>
-        <tbody id="roster"></tbody>
-      </table>
-      <div class="note">
-        컨디션 신호는 수면·주관 피로도·통증·훈련부하의 <b>변화 폭</b>을 기준으로 표시한 모니터링 지표입니다.
-        부상 여부를 판정하거나 진단하지 않으며, 최종 판단은 지도자·의무팀이 합니다.
-      </div>
-    </div>
-
-    <div class="side">
-      <div class="card">
-        <h2>신호 기준</h2>
-        <div class="body legend">
-          <div><i style="background:var(--g)"></i> <b>양호</b> — 평소 범위 안</div>
-          <div><i style="background:var(--y)"></i> <b>주의</b> — 수면·피로·통증 중 2개 이상 변화</div>
-          <div><i style="background:var(--r)"></i> <b>확인 필요</b> — 통증 강도 7 이상 또는 부하 급증</div>
-          <div><i style="background:var(--gray)"></i> <b>미입력</b> — 오늘 기록 없음</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>팀 입력률 (최근 14일)</h2>
-        <div class="body">
-          <div class="spark" id="spark"></div>
-          <div class="sub2" id="sparkSub"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>이번 주 할 일</h2>
-        <div class="body plan" id="todo"></div>
-      </div>
-    </div>
+  <div class="card" style="margin-top:14px;padding:20px 8px">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:230px;padding-left:16px">선수</th><th style="width:110px">신호</th>
+          <th>수면</th><th>주관 피로도</th><th>통증</th>
+          <th style="width:110px">훈련부하 추세</th><th style="width:100px">이번 달 입력</th>
+        </tr>
+      </thead>
+      <tbody id="roster"></tbody>
+    </table>
   </div>
 </div>
 
 <footer>
   샘플 화면입니다. 표시된 선수 정보는 실제 데이터가 아닌 <b>가명·예시값</b>입니다.<br>
-  건강 관련 정보는 민감정보로 분류해 <b>별도 동의</b> 후 수집합니다.
-  미성년 선수는 <b>법정대리인 동의</b>를 함께 받으며, 만 14세 미만은 법정대리인 동의 없이 가입이 진행되지 않습니다.
-  수집 항목은 국내 서버에 암호화 저장하고, 동의 철회·탈퇴 시 지체 없이 파기합니다.
+  컨디션 신호는 수면·주관 피로도·통증·훈련부하의 변화 폭을 표시한 모니터링 지표이며, 부상 여부를 판정하거나 진단하지 않습니다.
+  건강 관련 정보는 민감정보로 별도 동의 후 수집하고, 미성년 선수는 법정대리인 동의를 함께 받습니다.
 </footer>
 
 <script>
 const TEAMS = [
   {
-    id:'nt', name:'봅슬레이·스켈레톤 실업팀', meta:'성인 12명',
-    consent:'성인 12명 · 본인 동의 12/12 · 민감정보(건강) 별도 동의 12/12 완료',
-    kpi:{done:9,total:12,doneSub:'3명 미입력 · 평균 28초 소요',sig:'주의 2',sigColor:'y',pain:2,painSub:'허리 1 · 무릎 1 (강도 4 이상)',load:'1.18'},
-    dots:['g','g','g','g','g','g','g','y','y','gray','gray','gray'],
-    rate:'평균 81% · 오늘 75%',
-    spark:[72,80,64,88,92,76,58,84,90,96,70,86,92,75],
-    todo:['미입력 3명 리마인드','통증 보고 2건 의무팀 공유','월간 리포트 발송 (8/31)','신규 선수 2명 계정 등록'],
+    name:'봅슬레이·스켈레톤 실업팀', meta:'성인 12명',
+    consent:'성인 12명 · 본인 동의 12/12 · 민감정보 별도 동의 12/12 완료',
+    hero:{badge:'8월 결과보고서', title:'이번 달 보고서, 준비됐습니다',
+          desc:'8월 1일부터 어제까지 <b>측정 248건</b>이 쌓였습니다. 지금 만들면 선수별 향상 추이와 팀 집계가 자동으로 들어갑니다.'},
+    kpi:{done:9,total:12,doneSub:'3명 미입력 · 평균 28초',sig:'주의 2',sigColor:'orange',pain:2,painSub:'허리 1 · 무릎 1',cum:'248건'},
+    chips:['green','green','green','green','green','green','green','orange','orange','gray','gray','gray'],
+    hist:[
+      ['7월 팀 결과보고서','2026.07','대한봅슬레이스켈레톤경기연맹','done'],
+      ['7월 개인 결과지 (12명)','2026.07','팀 내부 · 선수 배부','done'],
+      ['2분기 운영 현황','2026.04~06','시도체육회','done'],
+      ['8월 팀 결과보고서','2026.08','—','wait'],
+    ],
     rows:[
-      {id:'BS-014 김○○',pos:'봅슬레이 · 파일럿',age:'성인',sig:'주의',sleep:'5.2h',avg:'(평소 7.1h)',fat:'7 / 10',pain:'허리 · 강도 5',load:'1.42',pct:88,last:'오늘 07:12'},
-      {id:'SK-007 이○○',pos:'스켈레톤',age:'성인',sig:'주의',sleep:'6.0h',avg:'(평소 7.4h)',fat:'6 / 10',pain:'무릎 · 강도 4',load:'1.28',pct:74,last:'오늘 06:58'},
-      {id:'BS-003 박○○',pos:'봅슬레이 · 브레이크맨',age:'성인',sig:'양호',sleep:'7.8h',avg:'',fat:'3 / 10',pain:'',load:'1.05',pct:58,last:'오늘 07:30'},
-      {id:'SK-002 정○○',pos:'스켈레톤',age:'성인',sig:'양호',sleep:'7.5h',avg:'',fat:'4 / 10',pain:'',load:'1.11',pct:62,last:'오늘 07:05'},
-      {id:'BS-021 최○○',pos:'봅슬레이 · 브레이크맨',age:'성인',sig:'양호',sleep:'8.1h',avg:'',fat:'2 / 10',pain:'',load:'0.94',pct:49,last:'오늘 08:02'},
-      {id:'SK-011 한○○',pos:'스켈레톤',age:'성인',sig:'양호',sleep:'7.2h',avg:'',fat:'4 / 10',pain:'',load:'1.02',pct:55,last:'오늘 07:41'},
-      {id:'BS-009 조○○',pos:'봅슬레이 · 파일럿',age:'성인',sig:'미입력',last:'어제 21:40'},
-      {id:'SK-018 윤○○',pos:'스켈레톤',age:'성인',sig:'미입력',last:'어제 20:15'}
+      {id:'BS-014 김○○',pos:'봅슬레이 · 파일럿',age:'성인',sig:'주의',sleep:'5.2h',avg:'평소 7.1h',fat:'7 / 10',pain:'허리 · 강도 5',trend:'증가',pct:82,cum:'21회'},
+      {id:'SK-007 이○○',pos:'스켈레톤',age:'성인',sig:'주의',sleep:'6.0h',avg:'평소 7.4h',fat:'6 / 10',pain:'무릎 · 강도 4',trend:'증가',pct:71,cum:'22회'},
+      {id:'BS-003 박○○',pos:'봅슬레이 · 브레이크맨',age:'성인',sig:'양호',sleep:'7.8h',avg:'',fat:'3 / 10',pain:'',trend:'유지',pct:55,cum:'22회'},
+      {id:'SK-002 정○○',pos:'스켈레톤',age:'성인',sig:'양호',sleep:'7.5h',avg:'',fat:'4 / 10',pain:'',trend:'유지',pct:58,cum:'20회'},
+      {id:'BS-021 최○○',pos:'봅슬레이 · 브레이크맨',age:'성인',sig:'양호',sleep:'8.1h',avg:'',fat:'2 / 10',pain:'',trend:'감소',pct:44,cum:'22회'},
+      {id:'BS-009 조○○',pos:'봅슬레이 · 파일럿',age:'성인',sig:'미입력',cum:'18회'},
     ]
   },
   {
-    id:'hs', name:'○○고등학교 육상부', meta:'U-18 · 18명',
+    name:'○○고등학교 육상부', meta:'U-18 · 18명',
     consent:'미성년 18명 (만 15–18세) · 본인 동의 18/18 · <b>법정대리인 동의 18/18 완료</b>',
-    kpi:{done:14,total:18,doneSub:'4명 미입력 · 평균 31초 소요',sig:'확인 필요 1',sigColor:'r',pain:2,painSub:'정강이 1 · 발목 1 (강도 4 이상)',load:'1.21'},
-    dots:['g','g','g','g','g','g','g','g','g','g','g','g','y','r','gray','gray','gray','gray'],
-    rate:'평균 78% · 오늘 78%',
-    spark:[64,72,70,80,86,68,52,78,84,88,66,80,86,78],
-    todo:['확인 필요 1명 — 의무팀 우선 연결','미입력 4명 리마인드 (야자 후 발송)','보호자 동의 갱신 안내 (학기 단위)','월간 리포트 학교 제출 (8/31)'],
+    hero:{badge:'8월 결과보고서 · 학교 제출용', title:'학교 제출 자료, 3일 뒤가 마감입니다',
+          desc:'8월 측정 <b>331건</b>이 쌓였습니다. 지금 만들면 선수별 향상 추이가 들어간 A4 4장이 나옵니다.'},
+    kpi:{done:14,total:18,doneSub:'4명 미입력 · 평균 31초',sig:'확인 필요 1',sigColor:'red',pain:2,painSub:'정강이 1 · 발목 1',cum:'331건'},
+    chips:['green','green','green','green','green','green','green','green','green','green','green','green','orange','red','gray','gray','gray','gray'],
+    hist:[
+      ['7월 운동부 운영 현황','2026.07','○○고등학교 · 교육청','done'],
+      ['7월 개인 결과지 (18명)','2026.07','학부모 배부','done'],
+      ['1학기 종합 보고','2026.03~07','○○고등학교','done'],
+      ['8월 운동부 운영 현황','2026.08','—','wait'],
+    ],
     rows:[
-      {id:'TF-102 강○○',pos:'단거리',age:'U-18',sig:'확인 필요',sleep:'4.8h',avg:'(평소 7.2h)',fat:'8 / 10',pain:'정강이 · 강도 7',load:'1.55',pct:96,last:'오늘 06:40'},
-      {id:'TF-118 오○○',pos:'중거리',age:'U-18',sig:'주의',sleep:'5.9h',avg:'(평소 7.6h)',fat:'6 / 10',pain:'발목 · 강도 4',load:'1.31',pct:78,last:'오늘 06:52'},
-      {id:'TF-107 서○○',pos:'단거리',age:'U-18',sig:'양호',sleep:'7.9h',avg:'',fat:'3 / 10',pain:'',load:'1.08',pct:60,last:'오늘 07:02'},
-      {id:'TF-115 남○○',pos:'도약',age:'U-18',sig:'양호',sleep:'8.2h',avg:'',fat:'2 / 10',pain:'',load:'0.97',pct:51,last:'오늘 06:58'},
-      {id:'TF-121 배○○',pos:'투척',age:'U-18',sig:'양호',sleep:'7.4h',avg:'',fat:'4 / 10',pain:'',load:'1.12',pct:63,last:'오늘 07:15'},
-      {id:'TF-109 문○○',pos:'중거리',age:'U-18',sig:'양호',sleep:'7.6h',avg:'',fat:'3 / 10',pain:'',load:'1.03',pct:56,last:'오늘 06:47'},
-      {id:'TF-113 신○○',pos:'단거리',age:'U-18',sig:'미입력',last:'어제 22:10'},
-      {id:'TF-125 임○○',pos:'도약',age:'U-18',sig:'미입력',last:'어제 21:35'}
+      {id:'TF-102 강○○',pos:'단거리',age:'U-18',sig:'확인 필요',sleep:'4.8h',avg:'평소 7.2h',fat:'8 / 10',pain:'정강이 · 강도 7',trend:'급증',pct:94,cum:'26회'},
+      {id:'TF-118 오○○',pos:'중거리',age:'U-18',sig:'주의',sleep:'5.9h',avg:'평소 7.6h',fat:'6 / 10',pain:'발목 · 강도 4',trend:'증가',pct:74,cum:'25회'},
+      {id:'TF-107 서○○',pos:'단거리',age:'U-18',sig:'양호',sleep:'7.9h',avg:'',fat:'3 / 10',pain:'',trend:'유지',pct:57,cum:'27회'},
+      {id:'TF-115 남○○',pos:'도약',age:'U-18',sig:'양호',sleep:'8.2h',avg:'',fat:'2 / 10',pain:'',trend:'유지',pct:48,cum:'26회'},
+      {id:'TF-121 배○○',pos:'투척',age:'U-18',sig:'양호',sleep:'7.4h',avg:'',fat:'4 / 10',pain:'',trend:'증가',pct:61,cum:'24회'},
+      {id:'TF-113 신○○',pos:'단거리',age:'U-18',sig:'미입력',cum:'19회'},
     ]
   },
   {
-    id:'ms', name:'○○중학교 수영부', meta:'U-15 · 14명',
-    consent:'미성년 14명 (만 13–15세, <b>만 14세 미만 6명</b>) · 법정대리인 동의 14/14 완료 · 미동의 계정은 생성되지 않습니다',
-    kpi:{done:11,total:14,doneSub:'3명 미입력 · 평균 24초 소요',sig:'주의 2',sigColor:'y',pain:2,painSub:'어깨 2 (강도 4 이상)',load:'1.13'},
-    dots:['g','g','g','g','g','g','g','g','g','y','y','gray','gray','gray'],
-    rate:'평균 86% · 오늘 79%',
-    spark:[78,84,80,90,94,82,70,88,92,96,84,90,94,79],
-    todo:['어깨 통증 2건 — 수영 강도 조정 협의','미입력 3명 보호자 알림','만 14세 도달 선수 2명 동의 재확인','월간 리포트 학부모 공유 (8/31)'],
+    name:'○○중학교 수영부', meta:'U-15 · 14명',
+    consent:'미성년 14명 (만 13–15세, <b>만 14세 미만 6명</b>) · 법정대리인 동의 14/14 완료',
+    hero:{badge:'8월 결과보고서', title:'이번 달 보고서, 준비됐습니다',
+          desc:'8월 측정 <b>276건</b>이 쌓였습니다. 학부모 상담 자료로 쓸 개인 결과지도 함께 나옵니다.'},
+    kpi:{done:11,total:14,doneSub:'3명 미입력 · 평균 24초',sig:'주의 2',sigColor:'orange',pain:2,painSub:'어깨 2',cum:'276건'},
+    chips:['green','green','green','green','green','green','green','green','green','orange','orange','gray','gray','gray'],
+    hist:[
+      ['7월 운동부 운영 현황','2026.07','○○중학교','done'],
+      ['7월 개인 결과지 (14명)','2026.07','학부모 배부','done'],
+      ['상반기 육성 성과','2026.01~06','시도체육회','done'],
+      ['8월 운동부 운영 현황','2026.08','—','wait'],
+    ],
     rows:[
-      {id:'SW-204 유○○',pos:'자유형',age:'U-15',sig:'주의',sleep:'6.1h',avg:'(평소 8.2h)',fat:'6 / 10',pain:'어깨 · 강도 5',load:'1.34',pct:80,last:'오늘 06:30'},
-      {id:'SW-211 곽○○',pos:'접영',age:'U-15',sig:'주의',sleep:'6.6h',avg:'(평소 8.0h)',fat:'5 / 10',pain:'어깨 · 강도 4',load:'1.26',pct:72,last:'오늘 06:35'},
-      {id:'SW-202 진○○',pos:'배영',age:'U-15',sig:'양호',sleep:'8.6h',avg:'',fat:'2 / 10',pain:'',load:'1.01',pct:54,last:'오늘 06:41'},
-      {id:'SW-208 하○○',pos:'자유형',age:'U-15',sig:'양호',sleep:'8.9h',avg:'',fat:'3 / 10',pain:'',load:'0.96',pct:50,last:'오늘 06:28'},
-      {id:'SW-215 노○○',pos:'평영',age:'U-15',sig:'양호',sleep:'8.3h',avg:'',fat:'3 / 10',pain:'',load:'1.07',pct:59,last:'오늘 06:44'},
-      {id:'SW-206 심○○',pos:'개인혼영',age:'U-15',sig:'양호',sleep:'8.1h',avg:'',fat:'4 / 10',pain:'',load:'1.13',pct:64,last:'오늘 06:38'},
-      {id:'SW-219 표○○',pos:'배영',age:'U-15',sig:'미입력',last:'어제 20:50'},
-      {id:'SW-213 방○○',pos:'평영',age:'U-15',sig:'미입력',last:'어제 21:05'}
+      {id:'SW-204 유○○',pos:'자유형',age:'U-15',sig:'주의',sleep:'6.1h',avg:'평소 8.2h',fat:'6 / 10',pain:'어깨 · 강도 5',trend:'증가',pct:76,cum:'23회'},
+      {id:'SW-211 곽○○',pos:'접영',age:'U-15',sig:'주의',sleep:'6.6h',avg:'평소 8.0h',fat:'5 / 10',pain:'어깨 · 강도 4',trend:'증가',pct:69,cum:'22회'},
+      {id:'SW-202 진○○',pos:'배영',age:'U-15',sig:'양호',sleep:'8.6h',avg:'',fat:'2 / 10',pain:'',trend:'유지',pct:51,cum:'24회'},
+      {id:'SW-208 하○○',pos:'자유형',age:'U-15',sig:'양호',sleep:'8.9h',avg:'',fat:'3 / 10',pain:'',trend:'감소',pct:46,cum:'23회'},
+      {id:'SW-215 노○○',pos:'평영',age:'U-15',sig:'양호',sleep:'8.3h',avg:'',fat:'3 / 10',pain:'',trend:'유지',pct:56,cum:'21회'},
+      {id:'SW-219 표○○',pos:'배영',age:'U-15',sig:'미입력',cum:'17회'},
     ]
   }
 ];
 
-const SIG = {
-  '양호':      {c:'var(--g)',    k:'g'},
-  '주의':      {c:'var(--y)',    k:'y'},
-  '확인 필요': {c:'var(--r)',    k:'r'},
-  '미입력':    {c:'var(--gray)', k:'gray'}
-};
-const CVAR = {g:'var(--g)', y:'var(--y)', r:'var(--r)', gray:'var(--gray)'};
+const C = {green:'var(--green)', orange:'var(--orange)', red:'var(--red)', gray:'#D1D6DB'};
+const SIG = {'양호':'green','주의':'orange','확인 필요':'red','미입력':'gray'};
 const $ = id => document.getElementById(id);
 
 function render(t){
+  $('heroBadge').textContent = t.hero.badge;
+  $('heroTitle').textContent = t.hero.title;
+  $('heroDesc').innerHTML = t.hero.desc;
+
   $('consentBar').innerHTML =
-    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none">' +
-    '<path d="M12 2l8 3.5v6c0 4.8-3.2 8.9-8 10.5-4.8-1.6-8-5.7-8-10.5v-6L12 2z" fill="#22c55e" opacity=".18"/>' +
-    '<path d="M12 2l8 3.5v6c0 4.8-3.2 8.9-8 10.5-4.8-1.6-8-5.7-8-10.5v-6L12 2z" stroke="#22c55e" stroke-width="1.5"/>' +
-    '<path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="#22c55e" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>' +
-    '</svg><div>' + t.consent + '</div><a class="link" href="#">동의 관리 →</a>';
+    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#00C471"/>' +
+    '<path d="M8 12.3l2.6 2.6 5.4-5.6" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+    '<div>' + t.consent + '</div><a class="link" href="#">동의 관리</a>';
 
   $('kDone').textContent = t.kpi.done;
   $('kTotal').textContent = t.kpi.total;
   $('kDoneSub').textContent = t.kpi.doneSub;
   $('kSig').textContent = t.kpi.sig;
-  $('kSig').style.color = CVAR[t.kpi.sigColor];
-  $('kDots').innerHTML = t.dots.map(d => '<span class="dot" style="background:' + CVAR[d] + '"></span>').join('');
+  $('kSig').style.color = C[t.kpi.sigColor];
+  $('kChips').innerHTML = t.chips.map(c => '<span class="chip" style="background:' + C[c] + '"></span>').join('');
   $('kPain').textContent = t.kpi.pain;
   $('kPainSub').textContent = t.kpi.painSub;
-  $('kLoad').textContent = t.kpi.load;
+  $('kCum').textContent = t.kpi.cum;
 
-  $('rosterCnt').textContent = '· 신호 순 정렬 · ' + t.meta;
-  $('roster').innerHTML = t.rows.map(function(r){
-    var s = SIG[r.sig];
-    var chip = r.age === '성인'
-      ? '<span class="chip adult">성인</span>'
-      : '<span class="chip minor">' + r.age + '</span>';
-    var sub = r.age === '성인'
-      ? r.pos
-      : r.pos + ' <span class="okmark">· 법정대리인 동의 ✓</span>';
-    var cells = (r.sig === '미입력')
-      ? '<td class="wait">—</td><td class="wait">—</td><td class="wait">—</td>' +
-        '<td><div class="bar-mini"><span style="width:0"></span></div><span class="sub2">—</span></td>'
-      : '<td>' + r.sleep + (r.avg ? ' <span class="sub2">' + r.avg + '</span>' : '') + '</td>' +
-        '<td>' + r.fat + '</td>' +
-        '<td class="' + (r.pain ? 'pain' : 'none') + '">' + (r.pain || '없음') + '</td>' +
-        '<td><div class="bar-mini"><span style="width:' + r.pct + '%;background:' + s.c + '"></span></div>' +
-        '<span class="sub2">' + r.load + '</span></td>';
-    return '<tr class="row">' +
-      '<td><div class="nm">' + r.id + chip + '</div><div class="sub2">' + sub + '</div></td>' +
-      '<td><span class="sig" style="color:' + s.c + '"><i style="background:' + s.c + '"></i>' + r.sig + '</span></td>' +
-      cells +
-      '<td class="' + (r.sig === '미입력' ? 'wait' : '') + '">' + r.last + '</td></tr>';
+  $('hist').innerHTML = t.hist.map(function(h){
+    return '<tr class="row"><td style="padding-left:16px;font-weight:600">' + h[0] + '</td>' +
+      '<td style="color:var(--sub)">' + h[1] + '</td>' +
+      '<td style="color:var(--sub)">' + h[2] + '</td>' +
+      '<td><span class="st ' + h[3] + '">' + (h[3] === 'done' ? '발행 완료' : '대기') + '</span></td>' +
+      '<td style="text-align:right;padding-right:16px"><span style="color:var(--blue);font-weight:700">' +
+      (h[3] === 'done' ? 'PDF' : '만들기') + '</span></td></tr>';
   }).join('');
 
-  $('spark').innerHTML = t.spark.map(function(h){ return '<div style="height:' + h + '%"></div>'; }).join('');
-  $('sparkSub').textContent = t.rate;
-  $('todo').innerHTML = t.todo.map(function(x){ return '· ' + x; }).join('<br>');
+  $('roster').innerHTML = t.rows.map(function(r){
+    var c = C[SIG[r.sig]];
+    var pill = r.age === '성인'
+      ? '<span class="pill adult">성인</span>'
+      : '<span class="pill minor">' + r.age + '</span>';
+    var cells = (r.sig === '미입력')
+      ? '<td class="none">—</td><td class="none">—</td><td class="none">—</td>' +
+        '<td><div class="bar-mini"><span style="width:0"></span></div></td>'
+      : '<td><b>' + r.sleep + '</b>' + (r.avg ? ' <span class="sub2">' + r.avg + '</span>' : '') + '</td>' +
+        '<td>' + r.fat + '</td>' +
+        '<td class="' + (r.pain ? '' : 'none') + '">' + (r.pain || '없음') + '</td>' +
+        '<td><div class="bar-mini"><span style="width:' + r.pct + '%;background:' + c + '"></span></div>' +
+        '<div class="sub2">' + r.trend + '</div></td>';
+    return '<tr class="row"><td style="padding-left:16px"><div class="nm">' + r.id + pill + '</div>' +
+      '<div class="sub2">' + r.pos + '</div></td>' +
+      '<td><span class="sig" style="color:' + c + '"><i style="background:' + c + '"></i>' + r.sig + '</span></td>' +
+      cells + '<td style="color:var(--sub)">' + r.cum + '</td></tr>';
+  }).join('');
 }
 
 var sel = $('teamSel');
